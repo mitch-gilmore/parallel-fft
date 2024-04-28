@@ -6,6 +6,8 @@ namespace fft
 	{
 		namespace scalar
 		{
+			using fft::cpu::Complex;
+			using fft::cpu::I;
 
 			void BitRevArray(Complex *Frev, Complex *F, int N)
 			{
@@ -35,7 +37,7 @@ namespace fft
 				int Bsize = 0;
 				int Nblocks = 0;
 
-				for (unsigned int x = 0; (int)x < plan.N; x++)
+				for (unsigned int x = 0; x < plan.N; x++)
 					Fout[reverseBits(x, plan.N)] = Fin[x];
 
 				for (int s = 0; s < log2n; s++)
