@@ -3,16 +3,13 @@
 #include <cmath>
 #include <complex>
 
-#define PI M_PI
-#define I Complex(0.0, 1.0)
-
-// using namespace std;
-typedef std::complex<double> Complex;
-
 namespace fft
 {
 	namespace cpu
 	{
+		typedef std::complex<double> Complex;
+
+		const Complex I = Complex(0.0, 1.0);
 
 		class fftPlan
 		{
@@ -31,7 +28,7 @@ namespace fft
 			// Function declarations
 			void FFT(Complex *Ftilde, Complex *F, Complex *omega, int N);
 			void BitRevArray(Complex *Frev, Complex *F, int N);
-			unsigned int reverseBits(unsigned int x, int N);
+			unsigned int reverseBits(unsigned int x, unsigned int N);
 		}
 	}
 }
