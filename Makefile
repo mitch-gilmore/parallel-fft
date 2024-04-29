@@ -3,8 +3,15 @@ CXX = g++
 CXXFLAGS = -std=c++11 -Wall
 LDFLAGS = -lm  # Link against math library
 
-SOURCES = $(shell find fft -type f -name '*.cpp')
-OBJECTS = $(SOURCES:.cpp=.o)
+GXX = nvcc
+
+C_SOURCES = $(shell find fft/cpu -type f -name '*.cpp')
+C_OBJECTS = $(SOURCES:.cpp=.o)
+
+CUDA_SOURCES = $(shell find fft/cuda -type f -name '*.cu')
+CUDA_OBJECTS = $(CUDA_SOURCES:.cu=.o)
+
+OBJECTS = $(C_OBJECTS) $(CUDA_OBJECTS)
 
 # Default target
 all: $(OBJECTS)
@@ -15,6 +22,9 @@ all: $(OBJECTS)
 # Compile each source file to an object file
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+%.o: %.cu
+	$(GXX) -c $< -o $@
 
 # Clean up build files
 clean:
