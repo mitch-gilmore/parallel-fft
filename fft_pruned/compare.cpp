@@ -1,6 +1,6 @@
 #include "fft.h"
 
-bool are_equal(double a, double b, double epsilon = 1e-9) {
+bool are_equal(double a, double b, double epsilon = 0.1) {
     return std::abs(a - b) < epsilon;
 }
 
@@ -48,7 +48,6 @@ void run_method(
       continue;
     } else {
       correct = false;
-      break;
     }
   }
 

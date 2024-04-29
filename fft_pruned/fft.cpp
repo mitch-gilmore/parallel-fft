@@ -113,8 +113,7 @@ double ft_fftw(int N, int K, Complex * f, Complex * f_tilde) {
 }
 
 double ft_pruned_fftw(int N, int K, Complex * f, Complex * f_tilde) {
-  int i, j;
-  fftw_complex in[N], out[N];
+  fftw_complex in[N], out[N], twids[(K-1)*(N/K-1)];
 
   // Prepare input.
   for (int i = 0; i < N; i++) {
@@ -124,9 +123,27 @@ double ft_pruned_fftw(int N, int K, Complex * f, Complex * f_tilde) {
 
   auto start = std::chrono::high_resolution_clock::now();
 
+  // Precompute twiddle factors (since we usually want more than one FFT)
+  for (int j = 1; j < N/K; ++j)
+    for (int i = 1; i < K; ++i) {
+      Complex cmp = cexp((I * FFTW_FORWARD * 2 * M_PI / N) * (i*j));
+      twids[(j-1)*(K-1) + (i-1)][0] = cmp.real();
+      twids[(j-1)*(K-1) + (i-1)][1] = cmp.imag();
+    }
+
   // Plan N/K FFTs of size K.
   fftw_plan plan = fftw_plan_many_dft(1, &K, N/K, in, NULL, N/K, 1, out, NULL, 1, K, FFTW_FORWARD, FFTW_ESTIMATE);
   fftw_execute(plan);
+
+  for (int j = 1; j < N/K; ++j) {
+    Complex res = FFTW_TO_COMPLEX(out[0]) + FFTW_TO_COMPLEX(out[j*K]);
+    COMPLEX_TO_FFTW(res, out[0]);
+
+    for (int i = 1; i < K; ++i) {
+      Complex st = FFTW_TO_COMPLEX(out[i]) + (FFTW_TO_COMPLEX(out[i + j*K]) * FFTW_TO_COMPLEX(twids[(j-1)*(K-1) + (i-1)]));
+      COMPLEX_TO_FFTW(st, out[i]);
+    }
+  }
 
   auto end = std::chrono::high_resolution_clock::now();
 

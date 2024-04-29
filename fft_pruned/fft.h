@@ -1,9 +1,9 @@
-#include <math.h>
 #include <iostream>
-#include <complex>
 #include <fstream>
 #include <cmath>
 #include <chrono>
+#include <math.h>
+#include <complex.h>
 
 #include <fftw3.h>
 
@@ -11,7 +11,10 @@
     std::chrono::duration<double, std::milli> duration = end - start; \
     timing = duration.count()
 
-#define FT_NUM_METHODS 3;
+#define FFTW_TO_COMPLEX(num) Complex(num[0], num[1])
+#define COMPLEX_TO_FFTW(cmplx, num) \
+    num[0] = cmplx.real(); \
+    num[1] = cmplx.imag();
 
 /// Shorthand Complex number.
 typedef std::complex<double> Complex;
