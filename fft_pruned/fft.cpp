@@ -36,7 +36,9 @@ double ift_dft(int N, Complex * f, Complex * f_tilde) {
 }
 
 void _ft_fft_h(int N, Complex *f, Complex *f_tilde) {
-  if (N <= 1) {
+  if(N <= 2) {
+    f_tilde[0] = f[0] + f[1];
+    f_tilde[1] = f[0] - f[1];
     return;
   }
 
@@ -55,9 +57,10 @@ void _ft_fft_h(int N, Complex *f, Complex *f_tilde) {
   _ft_fft_h(N / 2, even, even_tilde);
   _ft_fft_h(N / 2, odd, odd_tilde);
 
-  double theta = M_PI * 2 / N;
+  double theta = M_PI * 2.0 / (double)N;
+
   for (int k = 0; k < N / 2; ++k) {
-    Complex t = Complex(cos(k * theta), sin(k * theta)) * odd_tilde[k];
+    Complex t = exp(theta * Complex(0, 1) *(double)k) * odd_tilde[k];
     f_tilde[k] = even_tilde[k] + t;
     f_tilde[k + N/2] = even_tilde[k] - t;
   }

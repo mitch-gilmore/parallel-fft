@@ -4,7 +4,7 @@ LDFLAGS = -lfftw3
 
 SRCS = main.cpp fft.cpp compare.cpp
 OBJS = $(SRCS:.cpp=.o)
-EXEC = main
+EXEC = main.out
 
 all: $(EXEC)
 
