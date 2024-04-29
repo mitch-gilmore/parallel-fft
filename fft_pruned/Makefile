@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -Wall -O2
 LDFLAGS = -lfftw3
 
-SRCS = main.cpp fft.cpp
+SRCS = main.cpp fft.cpp compare.cpp
 OBJS = $(SRCS:.cpp=.o)
 EXEC = main
 
@@ -13,3 +13,6 @@ $(EXEC): $(OBJS)
 
 main.o: main.cpp fft.h
 	$(CC) $(CFLAGS) -c main.cpp -o main.o
+
+clean:
+	rm -f $(OBJS) $(EXEC)

@@ -29,6 +29,9 @@ double ft_fft(int N, int K, Complex * f, Complex * f_tidle);
 // Using fftw.
 double ft_fftw(int N, int K, Complex * f, Complex * f_tilde);
 
+// Pruned variants.
+double ft_pruned_fftw(int N, int K, Complex * f, Complex * f_tilde);
+
 // Testing.
 void run_method(
     FTSolver method, 
@@ -37,8 +40,15 @@ void run_method(
     int K,
     Complex * f, 
     Complex * f_tilde,
-    Complex * truth,
-    bool set_truth
+    Complex * truth = NULL,
+    bool set_truth = false,
+    bool print_progress = true
 );
 
-void compare_all(int N, int K, Complex * f, Complex * f_tilde);
+void compare_all(
+    int N, 
+    int K, 
+    Complex * f, 
+    Complex * f_tilde, 
+    bool print_progress = true
+);
