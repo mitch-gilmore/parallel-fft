@@ -88,15 +88,18 @@ double ft_fft(int N, int K, Complex * f, Complex * f_tidle) {
 double ft_fftw(int N, int K, Complex * f, Complex * f_tilde) {
   fftw_complex in[N], out[N];
 
+  // Create plan before init input.
+  fftw_plan p = fftw_plan_dft_1d(N, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
+
   // Prepare input.
   for (int i = 0; i < N; i++) {
     in[i][0] = f[i].real();
     in[i][1] = f[i].imag();
   }
 
+  // Execute.
   auto start = std::chrono::high_resolution_clock::now();
 
-  fftw_plan p = fftw_plan_dft_1d(N, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
   fftw_execute(p);
 
   auto end = std::chrono::high_resolution_clock::now();
@@ -118,14 +121,6 @@ double ft_fftw(int N, int K, Complex * f, Complex * f_tilde) {
 double ft_pruned_fftw(int N, int K, Complex * f, Complex * f_tilde) {
   fftw_complex in[N], out[N], twids[(K-1)*(N/K-1)];
 
-  // Prepare input.
-  for (int i = 0; i < N; i++) {
-    in[i][0] = f[i].real();
-    in[i][1] = f[i].imag();
-  }
-
-  auto start = std::chrono::high_resolution_clock::now();
-
   // Precompute twiddle factors (since we usually want more than one FFT)
   for (int j = 1; j < N/K; ++j)
     for (int i = 1; i < K; ++i) {
@@ -136,8 +131,21 @@ double ft_pruned_fftw(int N, int K, Complex * f, Complex * f_tilde) {
 
   // Plan N/K FFTs of size K.
   fftw_plan plan = fftw_plan_many_dft(1, &K, N/K, in, NULL, N/K, 1, out, NULL, 1, K, FFTW_FORWARD, FFTW_ESTIMATE);
+
+  // Prepare input.
+  for (int i = 0; i < N; i++) {
+    in[i][0] = f[i].real();
+    in[i][1] = f[i].imag();
+  }
+
+  // Execute.
+  auto start = std::chrono::high_resolution_clock::now();
+
   fftw_execute(plan);
 
+  auto end = std::chrono::high_resolution_clock::now();
+
+  // Prepare output.
   for (int j = 1; j < N/K; ++j) {
     Complex res = FFTW_TO_COMPLEX(out[0]) + FFTW_TO_COMPLEX(out[j*K]);
     COMPLEX_TO_FFTW(res, out[0]);
@@ -148,9 +156,6 @@ double ft_pruned_fftw(int N, int K, Complex * f, Complex * f_tilde) {
     }
   }
 
-  auto end = std::chrono::high_resolution_clock::now();
-
-  // Prepare output.
   for (int i = 0; i < N; i++) {
     f_tilde[i] = Complex(out[i][0], out[i][1]);
   }
