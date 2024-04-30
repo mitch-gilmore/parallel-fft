@@ -21,7 +21,7 @@ static void do_fft(fftw_plan p,
 		   int howmany, fftw_complex *data, int stride, int dist,
 		   fftw_complex *scratch)
 {
-	fftw_execute(p);
+	fftw(p, howmany, data, stride, dist, scratch, 1, 0);
 }
 
 /***************************************************************************/

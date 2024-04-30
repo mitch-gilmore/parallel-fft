@@ -22,7 +22,7 @@
 extern "C" {
 #endif                          /* __cplusplus */
 
-#include <fftw.h>
+#include <fftw>
 
 struct sparsefft3_range_struct_ {
      int min, max;

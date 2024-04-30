@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -Wall -O2
-LDFLAGS = -lfftw3
+LDFLAGS = -lfftw3 -lfftw
 
 SRCS = fft_sparse.cpp dft_3d_fft.cpp dft_3d_fftw.cpp dft_3d_naive.cpp
 OBJS = $(SRCS:.cpp=.o)

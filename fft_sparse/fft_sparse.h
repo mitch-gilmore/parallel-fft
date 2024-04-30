@@ -5,8 +5,6 @@
 #include <math.h>
 #include <complex.h>
 
-#include <fftw3.h>
-
 #define DURATION_MS(start, end, timing) \
     std::chrono::duration<double, std::milli> duration = end - start; \
     timing = duration.count()
@@ -22,3 +20,18 @@ double dft_3d_fft(int nx, int ny, int nz, Complex * in, Complex * out);
 
 //// FFT with FFTW (no parallelization)
 double dft_3d_fftw(int nx, int ny, int nz, Complex * in, Complex * out);
+
+// Generate cos data in 3 dimensions.
+void generate_data(int nx, int ny, int nz, Complex * in) {
+    int dims[] = {nx, ny, nz};
+
+    for (int i = 0; i < 3; i++) {
+        int dim = dims[i];
+        int pos = i + dim;
+
+        // Prepare a cosine wave.
+        for (int i = 0; i < dim; i++) {
+            in[pos + i] = Complex(cos(3 * 2 * M_PI * i / dim), 0.0);
+        }
+    }
+}

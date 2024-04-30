@@ -21,16 +21,7 @@ int main(void) {
     Complex * in_cp = new Complex[SIZE];
     Complex * out_cp = new Complex[SIZE];
 
-    for (int i = 0; i < 3; i++) {
-        int dim = dims[i];
-        int pos = i + dim;
-
-        // Prepare a cosine wave.
-        for (int i = 0; i < dim; i++) {
-            in[pos + i] = Complex(cos(3 * 2 * M_PI * i / dim), 0.0);
-            out[pos + i] = Complex(0.0, 0.0);
-        }
-    }
+    generate_data(NX, NY, NZ, in);
 
     double time;
 
