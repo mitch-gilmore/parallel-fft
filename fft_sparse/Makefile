@@ -1,8 +1,8 @@
 CC = g++
 CFLAGS = -Wall -O2
-LDFLAGS = -lfftw3 -lfftw
+LDFLAGS = -lfftw3 -pthread
 
-SRCS = fft_sparse.cpp dft_3d_fft.cpp dft_3d_fftw.cpp dft_3d_naive.cpp
+SRCS = fft_sparse.cpp dft_3d_fft_threads.cpp dft_3d_fft.cpp dft_3d_fftw.cpp dft_3d_naive.cpp
 OBJS = $(SRCS:.cpp=.o)
 EXEC = fft_sparse.out
 

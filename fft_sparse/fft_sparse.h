@@ -15,23 +15,11 @@ typedef std::complex<double> Complex;
 /// Naive 3D DFT (no parallelization)
 double dft_3d_naive(int nx, int ny, int nz, Complex * in, Complex * out);
 
-//// FFT (no parallelization)
+/// FFT (no parallelization)
 double dft_3d_fft(int nx, int ny, int nz, Complex * in, Complex * out);
 
-//// FFT with FFTW (no parallelization)
+/// FFT with FFTW (no parallelization)
 double dft_3d_fftw(int nx, int ny, int nz, Complex * in, Complex * out);
 
-// Generate cos data in 3 dimensions.
-void generate_data(int nx, int ny, int nz, Complex * in) {
-    int dims[] = {nx, ny, nz};
-
-    for (int i = 0; i < 3; i++) {
-        int dim = dims[i];
-        int pos = i + dim;
-
-        // Prepare a cosine wave.
-        for (int i = 0; i < dim; i++) {
-            in[pos + i] = Complex(cos(3 * 2 * M_PI * i / dim), 0.0);
-        }
-    }
-}
+/// FFT  (parallelized with threads)
+double dft_3d_fft_threads(int nx, int ny, int nz, Complex * in, Complex * out);
