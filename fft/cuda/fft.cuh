@@ -17,11 +17,13 @@ namespace fft
 		{
 		public:
 			Complex *omega;
+			int *indexShuffle;
 			unsigned int N;
 			fftPlan(unsigned int N);
 			~fftPlan();
 		private:
-			void makePhase(Complex *omega, unsigned int N);
+			void makePhase();
+			void makeIndexShuffle();
 		};
 
 
@@ -29,8 +31,8 @@ namespace fft
 		{
 			// Function declarations
 			void FFT(Complex *Ftilde, Complex *F, Complex *omega, int N);
-			void BitRevArray(Complex *Frev, Complex *F, int N);
-			unsigned int reverseBits(unsigned int x, unsigned int N);
+			__device__ void BitRevArray(Complex *Frev, Complex *F, int N);
+			__device__ unsigned int reverseBits(unsigned int x, unsigned int N);
 			__global__ void makePhase(Complex *omega, unsigned int N);
 		}
 	}
