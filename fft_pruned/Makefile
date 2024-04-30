@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -Wall -O2
 LDFLAGS = -lfftw3
 
-SRCS = main.cpp fft.cpp compare.cpp
+SRCS = main.cpp fft.cpp compare.cpp sparsefft3.c
 OBJS = $(SRCS:.cpp=.o)
 EXEC = main.out
 

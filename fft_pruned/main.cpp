@@ -1,6 +1,6 @@
 #include "fft.h"
 
-#define N (int)pow(2, 6)
+#define N (int)pow(2, 10)
 
 int main(void) {
     Complex * f = new Complex[N];
@@ -13,5 +13,5 @@ int main(void) {
     }
 
     // Compare.
-    compare_all(N, 16 * 2, f, f_tilde, false);
+    compare_all(N, N, f, f_tilde, false);
 }

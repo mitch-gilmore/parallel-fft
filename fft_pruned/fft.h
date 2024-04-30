@@ -6,6 +6,7 @@
 #include <complex.h>
 
 #include <fftw3.h>
+#include "sparsefft3.h"
 
 #define DURATION_MS(start, end, timing) \
     std::chrono::duration<double, std::milli> duration = end - start; \
