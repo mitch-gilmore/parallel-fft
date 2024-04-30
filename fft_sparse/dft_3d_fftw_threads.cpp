@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include <math.h>
 
-// gcc -o dft_3d_fftw_threads dft_3d_fftw_threads.cpp -lfftw3 -lpthread
+// gcc -o dft_3d_fftw_threads.out dft_3d_fftw_threads.cpp -lfftw3 -lpthread
 
 #define NX 32
 #define NY 32
