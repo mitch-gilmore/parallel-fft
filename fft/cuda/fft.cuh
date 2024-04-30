@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <math.h>
 #include <cuComplex.h>
 #include <cuda_runtime.h>
 
@@ -18,6 +19,7 @@ namespace fft
 		public:
 			Complex *omega;
 			int *indexShuffle;
+			unsigned int stages;
 			unsigned int N;
 			fftPlan(unsigned int N);
 			~fftPlan();
@@ -26,14 +28,6 @@ namespace fft
 			void makeIndexShuffle();
 		};
 
-
-		namespace base
-		{
-			// Function declarations
-			void FFT(Complex *Ftilde, Complex *F, Complex *omega, int N);
-			__device__ void BitRevArray(Complex *Frev, Complex *F, int N);
-			__device__ unsigned int reverseBits(unsigned int x, unsigned int N);
-			__global__ void makePhase(Complex *omega, unsigned int N);
-		}
+		void FFT(Complex *Fout, Complex *Fin, fftPlan plan, bool forward);
 	}
 }
