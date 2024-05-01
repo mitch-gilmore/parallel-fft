@@ -3,7 +3,6 @@
 #include <cmath>
 #include <math.h>
 #include <cuComplex.h>
-#include <cuda_runtime.h>
 
 
 namespace fft
