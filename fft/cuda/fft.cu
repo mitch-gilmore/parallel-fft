@@ -65,13 +65,13 @@ namespace fft
 					indeces[idx] = __brev(idx) >> (32 - stages);
 			}
 			
-			__global__ void static makePhase(Complex *omega, unsigned int N)
+			__global__ void static makePhase(Complex *omega, unsigned int N, double phase_scale)
 			{
 				int idx = threadIdx.x + blockIdx.x * blockDim.x;
 				
 				if (idx < N)
 				{
-					double phase = -1.0 * 2.0 * M_PI * (double)idx / (double)N;
+					double phase = -1.0 * 2.0 * phase_scale * M_PI * (double)idx / (double)N;
 					omega[idx].x = cos(phase);
 					omega[idx].y = sin(phase);
 				}
@@ -79,10 +79,11 @@ namespace fft
 		}
 		
 		// Constructor
-		fftPlan::fftPlan(unsigned int N)
+		fftPlan::fftPlan(unsigned int N, double phase_scale)
 		{
 			this->N = N;
 			this->stages = log2(N);
+			this->phase_scale = phase_scale;
 			
 			cudaMalloc((void**)&this->omega, N * sizeof(Complex));
 			this->makePhase();
@@ -104,7 +105,7 @@ namespace fft
 			int threadsPerBlock = 32;
 			int numBlocks = (this->N + threadsPerBlock - 1) / threadsPerBlock;
 
-			kernels::makePhase<<<numBlocks, threadsPerBlock>>>(this->omega, this->N);
+			kernels::makePhase<<<numBlocks, threadsPerBlock>>>(this->omega, this->N, this->phase_scale);
 		}
 
 		// Computes the index shuffle

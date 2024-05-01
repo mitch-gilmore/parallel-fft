@@ -31,7 +31,7 @@ float time_cuda(int N)
 	cudaMalloc(&d_out, N * sizeof(fft::cuda::Complex));
 	cudaMemcpy(d_in, h_in, N * sizeof(fft::cuda::Complex), cudaMemcpyHostToDevice);
 
-	fft::cuda::fftPlan plan(N);
+	fft::cuda::fftPlan plan(N, 1.0);
 
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);

@@ -20,7 +20,8 @@ namespace fft
 			int *indexShuffle;
 			unsigned int stages;
 			unsigned int N;
-			fftPlan(unsigned int N);
+			double phase_scale;
+			fftPlan(unsigned int N, double phase_scale);
 			~fftPlan();
 		private:
 			void makePhase();
