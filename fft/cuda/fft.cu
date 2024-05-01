@@ -19,21 +19,21 @@ namespace fft
 				if (idx < N/2)
 				{
 					// stockhams shuffle
-					{
+					{						
 						int Bsize = 2;
 						int Nblocks = (int)N / Bsize;
 						
-						int nb = idx / Bsize;
-						int pairs = idx % Bsize / 2;
+						int nb = idx / (Bsize / 2);
+						int pairs = idx % (Bsize / 2);
 						int k = pairs + nb * Bsize;
 						
 						Complex phase = (forward) ? omega[Nblocks * pairs] : cuConj(omega[Nblocks * pairs]);
-						Complex low = Fin[k];
-						Complex high = cuCmul(phase, Fin[k + Bsize / 2]);
+						Complex low = Fin[indeces[k]];
+						Complex high = Fin[indeces[k + Bsize / 2]];
 						
-						Fout[indeces[k]] = cuCadd(low, high);
-						Fout[indeces[k + Bsize / 2]] = cuCadd(low, cuCmul(twiddle, high));
-						
+						Fout[k] = cuCadd(low, high);
+						Fout[k + Bsize / 2] = cuCadd(low, cuCmul(twiddle, high));
+
 						__syncthreads();
 					}
 					
@@ -42,8 +42,8 @@ namespace fft
 						int Bsize = pow(2, s + 1);
 						int Nblocks = N / Bsize;
 						
-						int nb = idx / Bsize;
-						int pairs = idx % Bsize / 2;
+						int nb = idx / (Bsize / 2);
+						int pairs = idx % (Bsize / 2);
 						int k = pairs + nb * Bsize;
 						
 						Complex phase = (forward) ? omega[Nblocks * pairs] : cuConj(omega[Nblocks * pairs]);
@@ -56,30 +56,13 @@ namespace fft
 					}
 				}
 			}
-			
-			__forceinline__ __device__ static unsigned int reverseBits(unsigned int x, unsigned int stages, unsigned int N)
-			{
-				unsigned int xrev = 0;
-				// unsigned int p = log2(N); // p = 4
-				unsigned int n;
-				unsigned int power = N;
-				
-				for (unsigned int i = 0; i < stages; i++)
-				{
-					n = x % 2; // find lowest bit
-					power /= 2;
-					xrev += n * power; //  add to highest 2^3
-					x /= 2;
-				}
-				
-				return xrev;
-			}
+
 			
 			__global__ static void makeIndexShuffle(int *indeces, unsigned int stages, unsigned int N)
 			{
 				int idx = threadIdx.x + blockIdx.x * blockDim.x;
 				if (idx < N)
-					indeces[idx] = reverseBits(idx, stages, N);
+					indeces[idx] = __brev(idx) >> (32 - stages);
 			}
 			
 			__global__ void static makePhase(Complex *omega, unsigned int N)
@@ -137,7 +120,7 @@ namespace fft
 		{
 			
 			int threadsPerBlock = 32;
-			int numBlocks = (plan.N + threadsPerBlock - 1) / (threadsPerBlock * 2);
+			int numBlocks = (plan.N/2 + threadsPerBlock - 1) / (threadsPerBlock);
 			
 			kernels::FFT<<<numBlocks, threadsPerBlock>>>(Fout, Fin, plan.omega, plan.indexShuffle, plan.N, plan.stages, forward);
 		}
