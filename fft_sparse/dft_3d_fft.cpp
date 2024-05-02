@@ -61,7 +61,7 @@ double dft_3d_fft(int nx, int ny, int nz, Complex * in, Complex * out) {
         out[pos + i] = out_dim[i];
     }
   }
-  
+
 
   auto end = std::chrono::high_resolution_clock::now();
 
