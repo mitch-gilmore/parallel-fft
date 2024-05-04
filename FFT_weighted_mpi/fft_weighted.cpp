@@ -47,7 +47,7 @@ unsigned int reverseBits(unsigned int x, int N) {
   return xrev;    
 }
 
-double getWeight(int index, int stage) { return 1.0; }  // Placeholder for the weighting function
+double getWeight(int index, int stage) { return 1.0; }`  // Placeholder for the weighting function
 
 void FFT(Complex * Fout, Complex * Fin, Complex * omega, int N)
 {
