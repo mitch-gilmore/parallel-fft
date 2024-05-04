@@ -32,3 +32,12 @@ Run the following from the repo root directory to clean the repo.
 ```
 cd ./fft_sparse && make clean && cd ./dmsft && make clean && cd ../../
 ```
+
+## Scaling FFT
+
+The scaling FFT was implement in cuda and can be found in [here](fft/cuda/fft.cu). In order to compile the code first ensure you have the cuda tool kit installed along with GNU make and gcc. To compile the code into a test timing code simply run the following.
+
+```bash
+make
+./fft_cuda_time
+```
